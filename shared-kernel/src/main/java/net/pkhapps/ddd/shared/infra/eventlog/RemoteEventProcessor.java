@@ -51,13 +51,15 @@ class RemoteEventProcessor {
     private void processEvents(@NonNull RemoteEventLogService remoteEventLogService) {
         LOGGER.info("Processing remote events from {}", remoteEventLogService.source());
         var lastProcessedId = getLastProcessedId(remoteEventLogService);
-        var log = remoteEventLogService.currentLog();
 
+        var log = remoteEventLogService.currentLog();
+        LOGGER.debug("Starting with current log {}", log);
         // Find the first log
         while (!log.containsEvent(lastProcessedId)) {
             var previous = log.previous();
             if (previous.isPresent()) {
                 log = previous.get();
+                LOGGER.debug("Checking previous log {}", log);
             } else {
                 break;
             }
@@ -65,12 +67,15 @@ class RemoteEventProcessor {
 
         // Then, start processing events
         do {
+            LOGGER.debug("Processing events in log {}", log);
             processEvents(remoteEventLogService, lastProcessedId, log.events());
             var next = log.next();
             if (next.isPresent()) {
                 log = next.get();
             }
         } while (!log.isCurrent());
+
+        LOGGER.info("Finished processing remote events from {}", remoteEventLogService.source());
     }
 
     private void processEvents(@NonNull RemoteEventLogService remoteEventLogService, long lastProcessedId,
@@ -80,7 +85,7 @@ class RemoteEventProcessor {
                 transactionTemplate.execute(new TransactionCallbackWithoutResult() {
                     @Override
                     protected void doInTransactionWithoutResult(TransactionStatus status) {
-                        LOGGER.debug("Processing remote event {} from {]", event, remoteEventLogService.source());
+                        LOGGER.debug("Processing remote event {} from {}", event, remoteEventLogService.source());
                         publishEvent(event);
                         setLastProcessedId(remoteEventLogService, event.id());
                     }

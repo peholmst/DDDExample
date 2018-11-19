@@ -5,7 +5,9 @@ import com.fasterxml.jackson.annotation.JsonRawValue;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import net.pkhapps.ddd.shared.domain.base.DomainEvent;
+import net.pkhapps.ddd.shared.infra.jackson.RawJsonDeserializer;
 import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
@@ -36,6 +38,7 @@ public class StoredDomainEvent {
     @Column(name = "domain_event_body", nullable = false, length = DOMAIN_EVENT_JSON_MAX_LENGTH)
     @JsonProperty("domainEventBody")
     @JsonRawValue
+    @JsonDeserialize(using = RawJsonDeserializer.class)
     private String domainEventBody;
     @Transient
     private Class<? extends DomainEvent> domainEventClass;
@@ -165,5 +168,10 @@ public class StoredDomainEvent {
     @NonNull
     public Instant occurredOn() {
         return occurredOn;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s[id=%d, domainEventClass=%s]", getClass().getSimpleName(), id, domainEventClassName);
     }
 }
