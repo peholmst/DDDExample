@@ -1,4 +1,4 @@
-#DDD Example
+# DDD Example
 
 This is an example project for my Vaadin TechLunch presentation on November 22, 2018 about 
 *Domain Driven Design and the Hexagonal Architecture*. It demonstrates how you can use Spring Boot to create a 
