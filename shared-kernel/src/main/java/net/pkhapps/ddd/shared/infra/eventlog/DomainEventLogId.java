@@ -10,16 +10,16 @@ public class DomainEventLogId {
     private final long low;
     private final long high;
 
-    DomainEventLogId(long low, long high) {
+    public DomainEventLogId(long low, long high) {
         this.low = low;
         this.high = high;
     }
 
-    long low() {
+    public long low() {
         return low;
     }
 
-    long high() {
+    public long high() {
         return high;
     }
 

@@ -1,5 +1,7 @@
 package net.pkhapps.ddd.shared.infra.eventlog;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRawValue;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,12 +25,17 @@ public class StoredDomainEvent {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id", nullable = false)
+    @JsonProperty("id")
     private Long id;
     @Column(name = "occurred_on", nullable = false)
+    @JsonProperty("occurredOn")
     private Instant occurredOn;
     @Column(name = "domain_event_class_name", nullable = false)
+    @JsonProperty("domainEventClass")
     private String domainEventClassName;
     @Column(name = "domain_event_body", nullable = false, length = DOMAIN_EVENT_JSON_MAX_LENGTH)
+    @JsonProperty("domainEventBody")
+    @JsonRawValue
     private String domainEventBody;
     @Transient
     private Class<? extends DomainEvent> domainEventClass;
@@ -60,15 +67,37 @@ public class StoredDomainEvent {
         }
     }
 
+    @NonNull
+    public Long id() {
+        if (id == null) {
+            throw new IllegalStateException("The StoredDomainEvent has not been saved yet");
+        }
+        return id;
+    }
+
     /**
-     * Returns the domain event.
+     * Returns the domain event deserialized to {@link #domainEventClass()}.
      *
      * @param objectMapper the object mapper to use for parsing JSON.
      * @throws IllegalStateException if the JSON string cannot be turned into a domain event of the correct class.
      */
     @NonNull
     public DomainEvent toDomainEvent(@NonNull ObjectMapper objectMapper) {
+        return toDomainEvent(objectMapper, domainEventClass());
+    }
+
+    /**
+     * Returns the domain event.
+     *
+     * @param objectMapper     the object mapper to use for parsing JSON.
+     * @param domainEventClass the class to deserialize to.
+     * @throws IllegalStateException if the JSON string cannot be turned into a domain event of the correct class.
+     */
+    @NonNull
+    public <T extends DomainEvent> T toDomainEvent(@NonNull ObjectMapper objectMapper,
+                                                   @NonNull Class<T> domainEventClass) {
         Objects.requireNonNull(objectMapper, "objectMapper must not be null");
+        Objects.requireNonNull(domainEventClass, "domainEventClass must not be null");
         try {
             return objectMapper.readValue(domainEventBody, domainEventClass);
         } catch (IOException ex) {
