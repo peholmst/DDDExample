@@ -68,11 +68,17 @@ public class OrderCatalog {
     }
 
     public void startProcessing(@Nonnull OrderId orderId) {
-        orderRepository.findById(orderId).ifPresent(order -> order.startProcessing(clock));
+        orderRepository.findById(orderId).ifPresent(order -> {
+            order.startProcessing(clock);
+            orderRepository.save(order);
+        });
     }
 
     public void finishProcessing(@Nonnull OrderId orderId) {
-        orderRepository.findById(orderId).ifPresent(order -> order.finishProcessing(clock));
+        orderRepository.findById(orderId).ifPresent(order -> {
+            order.finishProcessing(clock);
+            orderRepository.save(order);
+        });
     }
 
     @NonNull

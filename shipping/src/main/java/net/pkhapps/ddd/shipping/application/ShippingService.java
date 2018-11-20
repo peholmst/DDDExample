@@ -30,8 +30,9 @@ public class ShippingService {
 
     public void startAssembly(@Nonnull PickingListId pickingListId) {
         pickingListRepository.findById(pickingListId).ifPresent(pickingList -> {
-            pickingList.startAssembly(); // JPA will automatically save the changes when the TX commits
+            pickingList.startAssembly();
             orderCatalogClient.startProcessing(pickingList.orderId());
+            pickingListRepository.save(pickingList);
         });
     }
 
@@ -39,6 +40,7 @@ public class ShippingService {
         pickingListRepository.findById(pickingListId).ifPresent(pickingList -> {
             pickingList.ship();
             orderCatalogClient.finishProcessing(pickingList.orderId());
+            pickingListRepository.save(pickingList);
         });
     }
 }

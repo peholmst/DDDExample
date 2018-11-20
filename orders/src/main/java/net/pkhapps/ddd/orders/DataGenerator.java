@@ -8,13 +8,12 @@ import net.pkhapps.ddd.shared.domain.financial.VAT;
 import net.pkhapps.ddd.shared.domain.geo.CityName;
 import net.pkhapps.ddd.shared.domain.geo.Country;
 import net.pkhapps.ddd.shared.domain.geo.PostalCode;
-import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.time.Instant;
 import java.util.UUID;
 
-@Component
+//@Component Disabled for now
 public class DataGenerator {
 
     private final OrderRepository orderRepository;
