@@ -16,8 +16,8 @@ public abstract class DomainObjectId implements ValueObject {
     private final String uuid;
 
     @JsonCreator
-    protected DomainObjectId(String uuid) {
-        this.uuid = uuid;
+    protected DomainObjectId(@NonNull String uuid) {
+        this.uuid = Objects.requireNonNull(uuid, "uuid must not be null");
     }
 
     /**
@@ -37,6 +37,7 @@ public abstract class DomainObjectId implements ValueObject {
      * Returns the ID as a UUID string.
      */
     @JsonValue
+    @NonNull
     public String toUUID() {
         return uuid;
     }
