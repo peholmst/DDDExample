@@ -1,6 +1,9 @@
 package net.pkhapps.ddd.shipping;
 
 import net.pkhapps.ddd.shared.SharedConfiguration;
+import net.pkhapps.ddd.shared.infra.eventlog.RemoteEventLogService;
+import net.pkhapps.ddd.shared.rest.client.RemoteEventLogServiceClient;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -23,5 +26,12 @@ public class ShippingApp {
     @Bean
     public Clock clock() {
         return Clock.systemUTC();
+    }
+
+    @Bean
+    public RemoteEventLogService orderEvents(@Value("${app.orders.url}") String serverUrl,
+                                             @Value("${app.orders.connect-timeout-ms}") int connectTimeout,
+                                             @Value("${app.orders.read-timeout-ms}") int readTimeout) {
+        return new RemoteEventLogServiceClient(serverUrl, connectTimeout, readTimeout);
     }
 }

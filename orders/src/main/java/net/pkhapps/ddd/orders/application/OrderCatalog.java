@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Nonnull;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
 import java.time.Clock;
@@ -64,6 +65,14 @@ public class OrderCatalog {
     public Optional<Order> findById(@NonNull OrderId orderId) {
         Objects.requireNonNull(orderId, "orderId must not be null");
         return orderRepository.findById(orderId);
+    }
+
+    public void startProcessing(@Nonnull OrderId orderId) {
+        orderRepository.findById(orderId).ifPresent(order -> order.startProcessing(clock));
+    }
+
+    public void finishProcessing(@Nonnull OrderId orderId) {
+        orderRepository.findById(orderId).ifPresent(order -> order.finishProcessing(clock));
     }
 
     @NonNull

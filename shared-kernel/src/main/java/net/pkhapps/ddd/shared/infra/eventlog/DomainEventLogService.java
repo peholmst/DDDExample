@@ -88,6 +88,9 @@ public class DomainEventLogService {
     @NonNull
     private DomainEventLogId currentLogId() {
         var max = storedDomainEventRepository.findHighestDomainEventId();
+        if (max == null) {
+            max = 0L;
+        }
         var remainder = max % LOG_SIZE;
         if (remainder == 0 && max == 0) {
             remainder = LOG_SIZE;

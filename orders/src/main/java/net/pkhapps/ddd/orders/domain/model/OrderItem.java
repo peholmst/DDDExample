@@ -12,7 +12,7 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "order_items")
+@Table(name = "order_items", uniqueConstraints = @UniqueConstraint(columnNames = {"product_id", "order_id"}))
 public class OrderItem extends AbstractEntity<OrderItemId> {
 
     @Column(name = "product_id", nullable = false)

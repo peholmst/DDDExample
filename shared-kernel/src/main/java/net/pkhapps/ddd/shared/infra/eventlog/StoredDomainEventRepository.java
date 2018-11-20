@@ -12,7 +12,7 @@ import java.util.stream.Stream;
 interface StoredDomainEventRepository extends JpaRepository<StoredDomainEvent, Long> {
 
     @Query("select max(se.id) from StoredDomainEvent se")
-    long findHighestDomainEventId();
+    Long findHighestDomainEventId();
 
     @Query("select se from StoredDomainEvent se where se.id >= :low and se.id <= :high order by se.id")
     Stream<StoredDomainEvent> findEventsBetween(@Param("low") Long low, @Param("high") Long high);
