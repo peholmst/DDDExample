@@ -114,7 +114,7 @@ class RemoteEventProcessor {
         remoteEventTranslators.values().stream()
                 .filter(translator -> translator.supports(event))
                 .findFirst()
-                .map(translator -> translator.translate(event))
+                .flatMap(translator -> translator.translate(event))
                 .ifPresent(applicationEventPublisher::publishEvent);
     }
 }

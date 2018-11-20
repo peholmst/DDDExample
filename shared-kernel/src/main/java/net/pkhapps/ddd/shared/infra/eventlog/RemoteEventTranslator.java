@@ -3,6 +3,8 @@ package net.pkhapps.ddd.shared.infra.eventlog;
 import net.pkhapps.ddd.shared.domain.base.DomainEvent;
 import org.springframework.lang.NonNull;
 
+import java.util.Optional;
+
 /**
  * Interface for a remote event translator that translates a remote {@link StoredDomainEvent} into a local
  * {@link DomainEvent}, taking into account that the original domain event class used on the remote side may not
@@ -20,5 +22,5 @@ public interface RemoteEventTranslator {
      * {@link DomainEvent}.
      */
     @NonNull
-    DomainEvent translate(@NonNull StoredDomainEvent remoteEvent);
+    Optional<DomainEvent> translate(@NonNull StoredDomainEvent remoteEvent);
 }

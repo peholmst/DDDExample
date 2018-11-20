@@ -7,6 +7,7 @@ import net.pkhapps.ddd.shared.infra.eventlog.StoredDomainEvent;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Nonnull;
+import java.util.Optional;
 
 @Service
 class OrderCreatedEventTranslator implements RemoteEventTranslator {
@@ -24,7 +25,7 @@ class OrderCreatedEventTranslator implements RemoteEventTranslator {
 
     @Override
     @Nonnull
-    public DomainEvent translate(@Nonnull StoredDomainEvent remoteEvent) {
-        return remoteEvent.toDomainEvent(objectMapper, OrderCreatedEvent.class);
+    public Optional<DomainEvent> translate(@Nonnull StoredDomainEvent remoteEvent) {
+        return Optional.of(remoteEvent.toDomainEvent(objectMapper, OrderCreatedEvent.class));
     }
 }
