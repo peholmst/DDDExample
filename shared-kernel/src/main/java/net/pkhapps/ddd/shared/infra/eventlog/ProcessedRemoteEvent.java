@@ -1,5 +1,6 @@
 package net.pkhapps.ddd.shared.infra.eventlog;
 
+import net.pkhapps.ddd.shared.domain.base.IdentifiableDomainObject;
 import org.springframework.lang.NonNull;
 
 import javax.persistence.Column;
@@ -9,11 +10,12 @@ import javax.persistence.Table;
 import java.util.Objects;
 
 /**
- * TODO Document me!
+ * Internal database entity used by {@link RemoteEventProcessor} to keep track of which remote events have already been
+ * processed.
  */
 @Entity
 @Table(name = "processed_remote_events")
-class ProcessedRemoteEvent {
+class ProcessedRemoteEvent implements IdentifiableDomainObject<String> {
 
     @Id
     @Column(name = "source", nullable = false)
@@ -39,5 +41,10 @@ class ProcessedRemoteEvent {
     @NonNull
     public long lastProcessedEventId() {
         return lastProcessedEventId;
+    }
+
+    @Override
+    public String id() {
+        return source();
     }
 }

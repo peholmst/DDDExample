@@ -34,3 +34,17 @@ not a good practice.
 You will want to have your external REST API to remain as stable as possible, while being able to evolve the domain 
 model as you learn new things and new requirements emerge. This is hard if your REST API is directly based on the domain
 model. Therefore, in a real world application, I very much recommmend you to use dedicated DTOs for your REST APIs.
+
+## Lack of Pagination
+
+To keep things simple, I don't use pagination anywhere (except for the domain event log). In real-world applications,
+you should *always* use pagination for unbounded queries (i.e. queries that you don't know for sure will return only
+a small and limited number of items).
+
+## Domain Event Distribution through REST
+
+The domain event log and REST protocol is based on the approach presented in *Implementing Domain Driven Design* by
+*Vaughn Vernon*. The idea itself is production-ready but the implementation in this example project is not. The handling
+of JSON is not optimal, caching headers are missing from the REST responses, there is no test coverage and the solution
+is not resilient enough. You can however use what's here as a basis for a production ready implementation, but don't
+use it 'as-is' in real-world applications.

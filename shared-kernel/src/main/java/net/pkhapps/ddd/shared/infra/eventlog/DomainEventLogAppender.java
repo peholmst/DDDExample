@@ -8,8 +8,8 @@ import org.springframework.transaction.event.TransactionalEventListener;
 
 /**
  * The domain event log appender listens for all {@link DomainEvent}s that are published and
- * {@link DomainEventLogService#append(DomainEvent) appends} them to the domain event log. The domain event is stored inside
- * the same transaction that published the event so if the transaction fails, no event is stored.
+ * {@link DomainEventLogService#append(DomainEvent) appends} them to the domain event log. The domain event is stored
+ * inside the same transaction that published the event so if the transaction fails, no event is stored.
  */
 @Service
 class DomainEventLogAppender {

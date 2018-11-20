@@ -22,7 +22,9 @@ import java.util.Objects;
 import java.util.Optional;
 
 /**
- * TODO Document me!
+ * Implementation of {@link RemoteEventLogService} that reads events from a REST-service backed by
+ * {@link net.pkhapps.ddd.shared.rest.controller.EventLogController}. Clients should create as many instances of this
+ * class as there are servers to read events from.
  */
 public class RemoteEventLogServiceClient implements RemoteEventLogService {
 
@@ -32,6 +34,13 @@ public class RemoteEventLogServiceClient implements RemoteEventLogService {
     private final URI currentLogUri;
     private final RestTemplate restTemplate;
 
+    /**
+     * Creates a new {@code RemoteEventLogServiceClient}.
+     *
+     * @param serverUrl      the base URL of the server. The correct path for the event log will be appended automatically.
+     * @param connectTimeout the connection timeout in milliseconds.
+     * @param readTimeout    the read timeout in milliseconds.
+     */
     public RemoteEventLogServiceClient(@NonNull String serverUrl, int connectTimeout, int readTimeout) {
         this.source = Objects.requireNonNull(serverUrl, "serverUrl must not be null");
         currentLogUri = UriComponentsBuilder.fromUriString(serverUrl).path("/api/event-log").build().toUri();

@@ -8,7 +8,8 @@ import java.util.Objects;
 import java.util.UUID;
 
 /**
- * Base class for value objects that are used as identifiers for {@link IdentifiableDomainObject}s.
+ * Base class for value objects that are used as identifiers for {@link IdentifiableDomainObject}s. These are
+ * essentially UUID-wrappers.
  */
 public abstract class DomainObjectId implements ValueObject {
 

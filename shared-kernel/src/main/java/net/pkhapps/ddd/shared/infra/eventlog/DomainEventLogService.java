@@ -13,10 +13,11 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * The domain event log is responsible for storing and retrieving {@link DomainEvent}s. These can be used for auditing
- * or for integration with other systems / bounded contexts.
+ * The domain event log service is responsible for storing and retrieving {@link DomainEvent}s. These can be used for
+ * auditing or for integration with other systems / bounded contexts.
  *
  * @see StoredDomainEvent
+ * @see DomainEventLog
  * @see DomainEventLogAppender
  */
 @Service
@@ -45,7 +46,7 @@ public class DomainEventLogService {
     }
 
     /**
-     * Returns the domain events that are stored in the given log.
+     * Returns the domain event log with the given ID.
      *
      * @param logId the ID of the log to retrieve.
      * @return the log or an empty {@code Optional} if the log does not exist.

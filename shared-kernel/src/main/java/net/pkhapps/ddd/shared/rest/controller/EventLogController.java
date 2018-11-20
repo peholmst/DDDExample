@@ -16,7 +16,9 @@ import java.net.URI;
 import java.util.List;
 
 /**
- * TODO Document me!
+ * REST controller that exposes the domain event log as a REST service.
+ *
+ * @see net.pkhapps.ddd.shared.rest.client.RemoteEventLogServiceClient
  */
 @RestController
 @RequestMapping(path = EventLogController.ROOT)

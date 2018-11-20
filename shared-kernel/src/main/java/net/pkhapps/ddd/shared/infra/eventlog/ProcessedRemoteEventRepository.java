@@ -3,7 +3,7 @@ package net.pkhapps.ddd.shared.infra.eventlog;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
- * TODO document me
+ * Repository interface for {@link ProcessedRemoteEvent}.
  */
 interface ProcessedRemoteEventRepository extends JpaRepository<ProcessedRemoteEvent, String> {
 }

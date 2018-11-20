@@ -17,7 +17,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * TODO Document me!
+ * Internal service that regularly retrieve and process {@link StoredDomainEvent}s from all
+ * {@link RemoteEventLogService}s that exist in the application context. {@link RemoteEventTranslator}s are used
+ * to translate the events into {@link net.pkhapps.ddd.shared.domain.base.DomainEvent}s, which are then published on
+ * the local {@link ApplicationEventPublisher application event bus}.
  */
 @Service
 class RemoteEventProcessor {
@@ -43,7 +46,10 @@ class RemoteEventProcessor {
                 new DefaultTransactionDefinition(TransactionDefinition.PROPAGATION_REQUIRES_NEW));
     }
 
-    @Scheduled(fixedDelay = 30000, initialDelay = 10000)
+    /**
+     * Retrieves and processes remote events.
+     */
+    @Scheduled(fixedDelay = 20000)
     public void processEvents() {
         remoteEventLogs.values().forEach(this::processEvents);
     }
