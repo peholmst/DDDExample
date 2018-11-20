@@ -83,4 +83,20 @@ public class Address implements ValueObject {
     public int hashCode() {
         return Objects.hash(addressLine1, addressLine2, city, postalCode, country);
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(addressLine1);
+        if (addressLine2 != null) {
+            sb.append(", ");
+            sb.append(addressLine2);
+        }
+        sb.append(", ");
+        sb.append(postalCode).append(" ").append(city);
+        sb.append(", ");
+        sb.append(country);
+        return sb.toString();
+    }
+
 }

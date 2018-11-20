@@ -5,9 +5,12 @@ import net.pkhapps.ddd.shared.domain.base.AbstractAggregateRoot;
 import net.pkhapps.ddd.shared.domain.base.ConcurrencySafeDomainObject;
 import net.pkhapps.ddd.shared.domain.geo.Address;
 import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
 import javax.annotation.Nonnull;
 import javax.persistence.*;
+import java.time.Clock;
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -19,6 +22,10 @@ public class PickingList extends AbstractAggregateRoot<PickingListId> implements
 
     @Version
     private Long version;
+    @Column(name = "created_on", nullable = false)
+    private Instant createdOn;
+    @Column(name = "shipped_on")
+    private Instant shippedOn;
     @Column(name = "order_id", nullable = false, unique = true)
     private OrderId orderId;
     @Column(name = "recipient_name", nullable = false)
@@ -36,13 +43,34 @@ public class PickingList extends AbstractAggregateRoot<PickingListId> implements
     private PickingList() {
     }
 
-    public PickingList(@Nonnull OrderId orderId, @Nonnull String recipientName, @Nonnull Address recipientAddress) {
+    public PickingList(@NonNull Instant createdOn, @Nonnull OrderId orderId, @Nonnull String recipientName, @Nonnull Address recipientAddress) {
         super(PickingListId.randomId(PickingListId.class));
+        setCreatedOn(createdOn);
         setOrderId(orderId);
         setRecipientName(recipientName);
         setRecipientAddress(recipientAddress);
         setState(PickingListState.WAITING);
         items = new HashSet<>();
+    }
+
+    @NonNull
+    @JsonProperty("createdOn")
+    public Instant createdOn() {
+        return createdOn;
+    }
+
+    private void setCreatedOn(@NonNull Instant createdOn) {
+        this.createdOn = Objects.requireNonNull(createdOn, "createdOn must not be null");
+    }
+
+    @Nullable
+    @JsonProperty("shippedOn")
+    public Instant shippedOn() {
+        return shippedOn;
+    }
+
+    private void setShippedOn(Instant shippedOn) {
+        this.shippedOn = shippedOn;
     }
 
     @Nonnull
@@ -92,11 +120,12 @@ public class PickingList extends AbstractAggregateRoot<PickingListId> implements
         setState(PickingListState.ASSEMBLY);
     }
 
-    public void ship() {
+    public void ship(Clock clock) {
         if (state != PickingListState.ASSEMBLY) {
             throw new IllegalStateException("Cannot ship when state is " + state);
         }
         setState(PickingListState.SHIPPED);
+        setShippedOn(clock.instant());
     }
 
     @NonNull

@@ -13,6 +13,7 @@ import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 
 import javax.annotation.Nonnull;
+import java.time.Clock;
 
 @Service
 class ShippingListCreator {
@@ -21,11 +22,14 @@ class ShippingListCreator {
 
     private final OrderCatalogClient orderCatalogClient;
     private final PickingListRepository pickingListRepository;
+    private final Clock clock;
 
     ShippingListCreator(OrderCatalogClient orderCatalogClient,
-                        PickingListRepository pickingListRepository) {
+                        PickingListRepository pickingListRepository,
+                        Clock clock) {
         this.orderCatalogClient = orderCatalogClient;
         this.pickingListRepository = pickingListRepository;
+        this.clock = clock;
     }
 
     @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
@@ -39,7 +43,7 @@ class ShippingListCreator {
     @Nonnull
     private PickingList createPickingList(@Nonnull Order order) {
         LOGGER.info("Creating picking list for order {}", order.orderId());
-        var pickingList = new PickingList(order.orderId(), order.shippingAddress().name(),
+        var pickingList = new PickingList(clock.instant(), order.orderId(), order.shippingAddress().name(),
                 new Address(order.shippingAddress().address1(),
                         order.shippingAddress().address2(),
                         order.shippingAddress().cityName(),
